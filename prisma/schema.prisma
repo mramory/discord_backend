@@ -1,0 +1,96 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  email String @unique
+  password String
+  name String
+  viewName String? @map("view_name")
+  birthday Json
+  img String @default("https://res.cloudinary.com/dtliw78tw/image/upload/v1698688821/defaultImg_kuiz9j.png")
+  role Role @default(USER)
+  
+  createdAt DateTime @default(now())
+
+  conversations Conversation[]
+
+  messages Message[]
+
+  sendFriendRequests FriendRequest[] @relation("Send")
+  receivedFriendRequests FriendRequest[] @relation("Receive")
+
+  friends User[] @relation("Friends")
+  friendsOf User[] @relation("Friends")
+}
+
+model FriendRequest {
+  id Int @id @default(autoincrement())
+
+  senderUser User @relation("Send", fields: [senderUserId], references: [id])
+  senderUserId Int 
+  
+  recipientUser User @relation("Receive", fields: [recipientUserId], references: [id])
+  recipientUserId Int 
+}
+
+model Conversation {
+  id Int @id @default(autoincrement())
+  img String?
+  name String?
+  type ConversationType
+  contentType ContentType?
+
+  users User[]
+
+  serverId Int?
+  server Server? @relation(fields: [serverId], references: [id], onDelete: Cascade)
+
+  messages Message[]
+}
+
+model Server {
+  id Int @id @default(autoincrement())
+  name String?
+  img String?
+  inviteCode String @unique
+
+  conversations Conversation[]
+}
+
+model Message {
+  id Int @id @default(autoincrement())
+  text String?
+  image String?
+  createdAt DateTime @default(now())
+
+  senderId Int
+  sender User @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  conversationId Int
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum ConversationType {
+  DIALOG
+  SERVER
+}
+
+enum ContentType {
+  TEXT
+  VOICE
+  VIDEO
+}
+
