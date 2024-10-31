@@ -154,7 +154,6 @@ export class ServerService {
     }
 
     async joinVideo(conversationId: string, mediaStream: MediaStream) {
-        // console.log(mediaStream)
         this.pusherService.trigger(`videoChannel__${conversationId}`, "newJoin", mediaStream)
     }
 }

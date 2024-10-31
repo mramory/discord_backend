@@ -82,7 +82,6 @@ export class AuthService {
 
     async refresh(req: Request, res: Response) {
         const refreshToken = req.cookies['RefreshToken']
-        console.log(req.cookies)
         if(!refreshToken) {
             res.clearCookie("RefreshToken")
             throw new HttpException("Refresh Token Not Provided", HttpStatus.NOT_ACCEPTABLE)

@@ -1,4 +1,5 @@
 import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
 import { PusherService } from 'src/pusher/pusher.service';
 
@@ -81,21 +82,25 @@ export class FriendsService {
 
 
     async getFriendRequests(currentUserId: number) {
-        const friendRequests = await this.prismaService.friendRequest.findMany({
-            where: {
-                recipientUserId: currentUserId
-            },
-            include: {
-                senderUser: {
-                    select: {
-                        id: true,
-                        email: true,
-                        name: true,
-                        viewName: true,
-                    }
-                }
-            }
-        })
+        console.log({currentUserId})
+        const friendRequests = await this.prismaService.$queryRaw(
+            Prisma.sql`
+            SELECT 
+                "FriendRequest".id AS "requestId",
+                "FriendRequest"."senderUserId",
+                "FriendRequest"."recipientUserId",
+                "User".id AS "senderId",
+                "User".email AS "senderEmail",
+                "User".name AS "senderName",
+                "User"."view_name" AS "senderViewName"
+            FROM 
+                "FriendRequest"
+            JOIN 
+                "User" ON "FriendRequest"."senderUserId" = "User".id
+            WHERE 
+                "FriendRequest"."recipientUserId" = ${currentUserId};
+        `
+        )
         if(!friendRequests) throw new HttpException("Friends Not Found", HttpStatus.NOT_FOUND)
         return friendRequests
     }
