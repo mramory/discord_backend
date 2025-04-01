@@ -1,4 +1,6 @@
-FROM node:18-alpine AS BackProd
+FROM node:18-alpine AS back_prod
+
+RUN apk add --no-cache openssl
 
 WORKDIR /usr/src/back
 
