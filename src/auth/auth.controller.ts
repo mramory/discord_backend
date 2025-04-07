@@ -4,6 +4,8 @@ import { LoginUserDto } from './dto/loginUser.dto';
 import { RegisterUserDto } from './dto/registerUser.dto';
 import { Request, Response } from 'express';
 import { JwtGuard } from './guards/jwt.guard';
+import { RestorePassDto } from './dto/restorePass.dto';
+import { FilePath } from './dto/userJson.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -33,6 +35,21 @@ export class AuthController {
   @Get("/isAuth")
   checkIsAuth(@Req() req: Request) {
     return this.authService.checkIsAuth(req)
+  }
+
+  @Post("/restorePass")
+  restorePass(@Body() dto: RestorePassDto) {
+    return this.authService.restorePass(dto)
+  }
+
+  @Post("/sendEmail")
+  sendEmail(@Body() dto: RestorePassDto) {
+    return this.authService.sendEmail(dto)
+  }
+
+  @Post("/loadUsersJson")
+  loadUsersJson(@Body() dto: FilePath) {
+    return this.authService.loadUsersJson(dto)
   }
 
   //@UseGuards(JwtGuard)

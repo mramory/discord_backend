@@ -82,7 +82,6 @@ export class FriendsService {
 
 
     async getFriendRequests(currentUserId: number) {
-        console.log({currentUserId})
         const friendRequests = await this.prismaService.$queryRaw(
             Prisma.sql`
             SELECT 

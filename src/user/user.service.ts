@@ -3,7 +3,7 @@ import { PrismaService } from 'src/prisma.service';
 import { FindOneUserByEmail, FindOneUserById } from './dto/findOneUser.dto';
 import { UserReturn } from './dto/user-return.object';
 import { Request } from 'express';
-import { User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 
 @Injectable()
@@ -36,13 +36,11 @@ export class UserService {
 
     async getAll(req: Request){
         const currentUser = req.user as User
-        const users = await this.prisma.user.findMany({
-            where: {
-                NOT: {
-                    email: currentUser.email
-                }
-            }
-        })
+        const users = await this.prisma.$queryRaw(Prisma.sql`
+            SELECT * 
+            FROM "User" 
+            WHERE "User"."email" != ${currentUser.email};
+        `);
         if(!users) throw new HttpException("Users Not Found", HttpStatus.NOT_FOUND)
         
         return users
@@ -52,16 +50,21 @@ export class UserService {
         const currentUser = req.user as User
         if(!currentUser) throw new HttpException("User Not Found", HttpStatus.BAD_REQUEST)
 
-        const cloudImage = await this.cloudinary.uploadImage(dto.img)
+        let cloudImage = null
+        if(dto.img){
+            cloudImage = await this.cloudinary.uploadImage(dto.img)
+        }
+
         const newUser = this.prisma.user.update({
             where: {
                 id: currentUser.id
             },
             data: {
                 name: dto.newName,
-                img: cloudImage.url
+                img: cloudImage?.url
             }
         })
+        console.log(newUser)
         return newUser
     }
 }
