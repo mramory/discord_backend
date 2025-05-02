@@ -1,5 +1,4 @@
 #!/bin/bash
 
-yarn prisma generate
-yarn prisma db push
+yarn migrate
 yarn start:prod
