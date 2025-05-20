@@ -1,61 +1,68 @@
-import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
+import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { LoginUserDto } from './dto/loginUser.dto';
 import { RegisterUserDto } from './dto/registerUser.dto';
-import { Request, Response } from 'express';
-import { JwtGuard } from './guards/jwt.guard';
 import { RestorePassDto } from './dto/restorePass.dto';
 import { FilePath } from './dto/userJson.dto';
+import { JwtGuard } from './guards/jwt.guard';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post("/login")
+  @Post('/login')
   login(@Body() dto: LoginUserDto, @Res() res: Response) {
-    return this.authService.login(dto, res)
+    return this.authService.login(dto, res);
   }
 
-  @Post("/register")
+  @Post('/register')
   createUser(@Body() dto: RegisterUserDto, @Res() res: Response) {
-    return this.authService.register(dto, res)
+    return this.authService.register(dto, res);
   }
 
-  @Get("/refresh")
+  @Get('/refresh')
   async refreshToken(@Req() req: Request, @Res() res: Response) {
-    return this.authService.refresh(req, res)
+    return this.authService.refresh(req, res);
   }
 
-  @Get("/logout")
+  @Get('/logout')
   logout(@Res() res: Response) {
-    return this.authService.logout(res)
+    return this.authService.logout(res);
   }
 
   @UseGuards(JwtGuard)
-  @Get("/isAuth")
+  @Get('/isAuth')
   checkIsAuth(@Req() req: Request) {
-    return this.authService.checkIsAuth(req)
+    return this.authService.checkIsAuth(req);
   }
 
-  @Post("/restorePass")
+  @Post('/restorePass')
   restorePass(@Body() dto: RestorePassDto) {
-    return this.authService.restorePass(dto)
+    return this.authService.restorePass(dto);
   }
 
-  @Post("/sendEmail")
+  @Post('/sendEmail')
   sendEmail(@Body() dto: RestorePassDto) {
-    return this.authService.sendEmail(dto)
+    return this.authService.sendEmail(dto);
   }
 
-  @Post("/loadUsersJson")
+  @Post('/loadUsersJson')
   loadUsersJson(@Body() dto: FilePath) {
-    return this.authService.loadUsersJson(dto)
+    return this.authService.loadUsersJson(dto);
   }
 
   //@UseGuards(JwtGuard)
-  @Get("/test")
+  @Get('/test')
   test(@Req() req: Request) {
-
-    return {message: "Success!!!"}
+    return { message: 'Success!!!' };
   }
 }
