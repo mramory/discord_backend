@@ -14,6 +14,8 @@ import { RegisterUserDto } from './dto/registerUser.dto';
 import { RestorePassDto } from './dto/restorePass.dto';
 import { FilePath } from './dto/userJson.dto';
 import { JwtGuard } from './guards/jwt.guard';
+import { JwtPayload } from './interfaces';
+import { IJwtRequest } from 'src/types/common';
 
 @Controller('auth')
 export class AuthController {
@@ -34,9 +36,10 @@ export class AuthController {
     return this.authService.refresh(req, res);
   }
 
+  @UseGuards(JwtGuard)
   @Get('/logout')
-  logout(@Res() res: Response) {
-    return this.authService.logout(res);
+  logout(@Req() req: IJwtRequest, @Res() res: Response) {
+    return this.authService.logout(req, res);
   }
 
   @UseGuards(JwtGuard)

@@ -10,6 +10,7 @@ import { Request, Response } from 'express';
 import * as fs from 'fs';
 import * as nodemailer from 'nodemailer';
 import { PrismaService } from 'src/prisma.service';
+import { IJwtRequest } from 'src/types/common';
 import { UserService } from 'src/user/user.service';
 import { LoginUserDto } from './dto/loginUser.dto';
 import { RegisterUserDto } from './dto/registerUser.dto';
@@ -135,13 +136,15 @@ export class AuthService {
     });
   }
 
-  async logout(res: Response) {
+  async logout(req: IJwtRequest, res: Response) {
     res.clearCookie('RefreshToken');
-    throw new HttpException('Loged Out', HttpStatus.OK);
+    res.clearCookie('AccessToken');
+    res.clearCookie('currentUserId');
+
+    res.status(200).json({ userId: req.user.id });
   }
 
   checkIsAuth(req: Request) {
-    console.log(req.user);
     const user = req.user;
     if (!user)
       throw new HttpException('Not Logged In', HttpStatus.UNAUTHORIZED);
