@@ -1,10 +1,7 @@
-
-
 export class GetFriendRequestsDto {
-    currentUserId: number
+  currentUserId: number;
 }
 
 export class AcceptOrDenyFriendRequestDto {
-    requestId: number
+  requestId: number;
 }
-

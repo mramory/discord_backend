@@ -1,12 +1,12 @@
 type RestorePassType = {
-    email: string
-    pass: string
-}
+  email: string;
+  pass: string;
+};
 
 export class RestorePassDto {
-    pass: string
+  pass: string;
 
-    email: string
+  email: string;
 
-    code: string
+  code: string;
 }

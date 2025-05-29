@@ -43,7 +43,7 @@ export class AuthService {
         email,
         password: hashPassword,
         name,
-        birthday,
+        birthday: new Date(birthday.year, birthday.month, birthday.day),
         viewName,
       },
     });
@@ -99,6 +99,8 @@ export class AuthService {
     const refreshToken = req.cookies['RefreshToken'];
     if (!refreshToken) {
       res.clearCookie('RefreshToken');
+      res.clearCookie('AccessToken');
+      res.clearCookie('currentUserId');
       throw new HttpException(
         'Refresh Token Not Provided',
         HttpStatus.NOT_ACCEPTABLE,
@@ -109,6 +111,8 @@ export class AuthService {
     });
     if (!payload) {
       res.clearCookie('RefreshToken');
+      res.clearCookie('AccessToken');
+      res.clearCookie('currentUserId');
       throw new HttpException(
         'Refresh Token Excided',
         HttpStatus.NOT_ACCEPTABLE,

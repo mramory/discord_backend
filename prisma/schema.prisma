@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -9,73 +8,93 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  email String @unique
-  password String
-  name String
-  viewName String? @map("view_name")
-  birthday Json
-  img String @default("https://res.cloudinary.com/dtliw78tw/image/upload/v1698688821/defaultImg_kuiz9j.png")
-  role Role @default(USER)
+  id                     Int @id @default(autoincrement())
+  email                  String @unique
+  password               String
+  name                   String
+  viewName               String? @map("view_name")
+  birthday               DateTime
+  img                    String @default("https://res.cloudinary.com/dtliw78tw/image/upload/v1698688821/defaultImg_kuiz9j.png")
+  role                   Role @default(USER)
   
-  createdAt DateTime @default(now())
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
 
-  conversations Conversation[]
+  conversations          Conversation[]
 
-  messages Message[]
+  messages               Message[]
 
-  sendFriendRequests FriendRequest[] @relation("Send")
+  sendFriendRequests     FriendRequest[] @relation("Send")
   receivedFriendRequests FriendRequest[] @relation("Receive")
 
-  friends User[] @relation("Friends")
-  friendsOf User[] @relation("Friends")
+  friendshipsInitiated   Friendship[]    @relation("Initiator")
+  friendshipsReceived    Friendship[]    @relation("Receiver")
+}
+
+model Friendship {
+  id          Int    @id @default(autoincrement())
+  initiator   User   @relation("Initiator", fields: [initiatorId], references: [id])
+  initiatorId Int
+  receiver    User   @relation("Receiver", fields: [receiverId], references: [id])
+  receiverId  Int
+  createdAt   DateTime @default(now())
+
+  @@unique([initiatorId, receiverId])
+  @@index([initiatorId])
+  @@index([receiverId])
 }
 
 model FriendRequest {
-  id Int @id @default(autoincrement())
+  id              Int @id @default(autoincrement())
+  status          FriendRequestStatus @default(PENDING)
 
-  senderUser User @relation("Send", fields: [senderUserId], references: [id])
-  senderUserId Int 
+  senderUser      User @relation("Send", fields: [senderUserId], references: [id])
+  senderUserId    Int 
   
-  recipientUser User @relation("Receive", fields: [recipientUserId], references: [id])
+  recipientUser   User @relation("Receive", fields: [recipientUserId], references: [id])
   recipientUserId Int 
+
+  @@unique([senderUserId, recipientUserId])
 }
 
 model Conversation {
-  id Int @id @default(autoincrement())
-  img String?
-  name String?
-  type ConversationType
+  id          Int @id @default(autoincrement())
+  img         String?
+  name        String?
+  type        ConversationType
   contentType ContentType?
 
-  users User[]
+  users       User[]
 
-  serverId Int?
-  server Server? @relation(fields: [serverId], references: [id], onDelete: Cascade)
+  serverId    Int?
+  server      Server? @relation(fields: [serverId], references: [id], onDelete: Cascade)
 
-  messages Message[]
+  messages    Message[]
 }
 
 model Server {
-  id Int @id @default(autoincrement())
-  name String?
-  img String?
-  inviteCode String @unique
+  id            Int @id @default(autoincrement())
+  name          String?
+  img           String?
+  inviteCode    String @unique
 
   conversations Conversation[]
 }
 
 model Message {
-  id Int @id @default(autoincrement())
-  text String?
-  image String?
-  createdAt DateTime @default(now())
+  id             Int @id @default(autoincrement())
+  text           String?
+  image          String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
-  senderId Int
-  sender User @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  senderId       Int
+  sender         User @relation(fields: [senderId], references: [id], onDelete: Cascade)
 
   conversationId Int
-  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId])
 }
 
 enum Role {
@@ -92,5 +111,11 @@ enum ContentType {
   TEXT
   VOICE
   VIDEO
+}
+
+enum FriendRequestStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
 }
 

@@ -9,13 +9,9 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { Request } from 'express';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { IJwtRequest } from 'src/types/common';
-import {
-  AcceptOrDenyFriendRequestDto,
-  GetFriendRequestsDto,
-} from './dto/getFriends.dto';
+import { AcceptOrDenyFriendRequestDto } from './dto/getFriends.dto';
 import { FriendsService } from './friends.service';
 
 @Controller('friends')
@@ -38,11 +34,8 @@ export class FriendsController {
 
   @UseGuards(JwtGuard)
   @Get('/req')
-  async getFriendRequests(
-    @Req() req: Request,
-    @Query() { currentUserId }: GetFriendRequestsDto,
-  ) {
-    return this.friendsService.getFriendRequests(+currentUserId);
+  async getFriendRequests(@Req() req: IJwtRequest) {
+    return this.friendsService.getFriendRequests(req.user.id);
   }
 
   @Post('/')

@@ -1,21 +1,20 @@
-import { IsEmail } from "class-validator";
-
+import { IsEmail } from 'class-validator';
 
 type BirthdayType = {
-    day: number
-    month: string
-    year: number
-}
+  day: number;
+  month: number;
+  year: number;
+};
 
 export class RegisterUserDto {
-    @IsEmail()
-    email: string
+  @IsEmail()
+  email: string;
 
-    password: string
+  password: string;
 
-    name: string
+  name: string;
 
-    birthday: BirthdayType
+  birthday: BirthdayType;
 
-    viewName?: string
+  viewName?: string;
 }
