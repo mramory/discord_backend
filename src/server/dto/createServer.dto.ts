@@ -1,9 +1,7 @@
-
-
 export class CreateServerDto {
-    name: string
+  name: string;
 
-    img?: string
+  img?: string;
 
-    userId: number
+  userId: number;
 }

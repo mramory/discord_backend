@@ -1,13 +1,12 @@
-
 export class CreateChannelDto {
-    serverId: string
-    
-    name: string
+  serverId: string;
 
-    type: ChannelType
+  name: string;
+
+  type: ChannelType;
 }
 
 enum ChannelType {
-    TEXT = "TEXT",
-    VOICE = "VOICE"
+  TEXT = 'TEXT',
+  VOICE = 'VOICE',
 }

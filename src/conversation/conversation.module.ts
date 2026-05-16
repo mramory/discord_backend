@@ -12,6 +12,13 @@ import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
 @Module({
   imports: [CloudinaryModule],
   controllers: [ConversationController],
-  providers: [ConversationService, PrismaService, AuthService, JwtService, UserService, PusherService],
+  providers: [
+    ConversationService,
+    PrismaService,
+    AuthService,
+    JwtService,
+    UserService,
+    PusherService,
+  ],
 })
 export class ConversationModule {}

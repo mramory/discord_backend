@@ -6,6 +6,6 @@ import { PusherService } from 'src/pusher/pusher.service';
 
 @Module({
   controllers: [ServerController],
-  providers: [ServerService, PrismaService, PusherService]
+  providers: [ServerService, PrismaService, PusherService],
 })
 export class ServerModule {}

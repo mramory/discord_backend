@@ -18,7 +18,7 @@ import { SocketService } from './socket.service';
     origin: 'http://localhost:3000',
   },
 })
-export class SocketGateway implements OnGatewayDisconnect, OnGatewayConnection {
+export class SocketGateway implements OnGatewayDisconnect {
   private readonly connectedClients: Map<string, Socket> = new Map();
   @WebSocketServer()
   private server: Socket;
@@ -27,8 +27,6 @@ export class SocketGateway implements OnGatewayDisconnect, OnGatewayConnection {
     private readonly socketService: SocketService,
     private readonly ACTIONS: ACTIONS,
   ) {}
-
-  handleConnection(client: Socket) {}
 
   handleDisconnect(socket: Socket) {
     this.socketService.LeaveRoom(socket);

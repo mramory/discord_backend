@@ -1,4 +1,12 @@
-import { Controller, Get, Param, Post, Query, Body, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  Body,
+  Delete,
+} from '@nestjs/common';
 import { MessagesService } from './messages.service';
 import { CreateMessageDto } from './dto/createMessage.dto';
 
@@ -6,23 +14,23 @@ import { CreateMessageDto } from './dto/createMessage.dto';
 export class MessagesController {
   constructor(private readonly messagesService: MessagesService) {}
 
-  @Get("/")
-  async getAllMessages(@Query("convId") convId: string) {
-    return this.messagesService.getAll(+convId)
+  @Get('/')
+  async getAllMessages(@Query('convId') convId: string) {
+    return this.messagesService.getAll(+convId);
   }
 
-  @Get("/:id")
-  async getMessage(@Param("id") id: string) {
-    return this.messagesService.getMessage(+id)
+  @Get('/:id')
+  async getMessage(@Param('id') id: string) {
+    return this.messagesService.getMessage(+id);
   }
 
-  @Post("/")
+  @Post('/')
   async createMessage(@Body() body: CreateMessageDto) {
-    return this.messagesService.create(body)
+    return this.messagesService.create(body);
   }
 
-  @Delete("/:id")
-  async deleteMessage(@Param("id") id: string) {
-    return this.messagesService.delete(id)
+  @Delete('/:id')
+  async deleteMessage(@Param('id') id: string) {
+    return this.messagesService.delete(id);
   }
 }

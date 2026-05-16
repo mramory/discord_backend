@@ -6,6 +6,6 @@ import { PusherService } from 'src/pusher/pusher.service';
 
 @Module({
   controllers: [MessagesController],
-  providers: [MessagesService, PrismaService, PusherService]
+  providers: [MessagesService, PrismaService, PusherService],
 })
 export class MessagesModule {}

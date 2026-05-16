@@ -11,6 +11,17 @@ import { SocketModule } from './socket/socket.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 
 @Module({
-  imports: [UserModule, AuthModule, ConfigModule.forRoot({isGlobal: true}), ConversationModule, PusherModule, MessagesModule, FriendsModule, ServerModule, SocketModule, CloudinaryModule]
+  imports: [
+    UserModule,
+    AuthModule,
+    ConfigModule.forRoot({ isGlobal: true }),
+    ConversationModule,
+    PusherModule,
+    MessagesModule,
+    FriendsModule,
+    ServerModule,
+    SocketModule,
+    CloudinaryModule,
+  ],
 })
 export class AppModule {}
