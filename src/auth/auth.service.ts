@@ -64,26 +64,26 @@ export class AuthService {
   async login(dto: LoginUserDto, res: Response) {
     const { email, password } = dto;
     const user = await this.userService.findOneByEmail({ email });
-    if (user) {
-      const match = await bcrypt.compare(password, user.password);
-      if (match) {
-        const tokens = this.getTokens(user);
-        res.cookie('RefreshToken', tokens.refreshToken);
-        res.cookie('AccessToken', tokens.accessToken);
-        res.cookie('currentUserId', user.id);
-        res.json({
-          accessToken: tokens.accessToken,
-          name: user.name,
-          email: user.email,
-          role: user.role,
-          viewName: user.viewName,
-          id: user.id,
-          img: user.img,
-        });
-      }
-      return new ConflictException('Invalid Credentials!');
+    if (!user) {
+      throw new HttpException('Invalid Credentials!', HttpStatus.UNAUTHORIZED);
     }
-    return new ConflictException('Invalid Credentials!');
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) {
+      throw new HttpException('Invalid Credentials!', HttpStatus.UNAUTHORIZED);
+    }
+    const tokens = this.getTokens(user);
+    res.cookie('RefreshToken', tokens.refreshToken);
+    res.cookie('AccessToken', tokens.accessToken);
+    res.cookie('currentUserId', user.id);
+    res.json({
+      accessToken: tokens.accessToken,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      viewName: user.viewName,
+      id: user.id,
+      img: user.img,
+    });
   }
 
   getRefreshToken(id: number) {

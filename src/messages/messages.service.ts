@@ -32,10 +32,10 @@ export class MessagesService {
   async create(data: CreateMessageDto) {
     const newMessage = await this.prismaService
       .$queryRaw(Prisma.sql`WITH inserted_message AS (
-                INSERT INTO "Message" (text, image, "senderId", "conversationId", "createdAt")
-                VALUES (${data.text}, ${data.image}, ${data.senderId}, ${Number(
-      data.conversationId,
-    )}, NOW())
+                INSERT INTO "Message" (text, image, "senderId", "conversationId", "createdAt", "updatedAt")
+                VALUES (${data.text ?? null}, ${data.image ?? null}, ${
+      data.senderId
+    }, ${Number(data.conversationId)}, NOW(), NOW())
                 RETURNING *
             )
             SELECT 
